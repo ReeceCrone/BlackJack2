@@ -2,9 +2,9 @@ package com.example.blackjack2;
 
 import java.util.ArrayList;
 
-public class Model implements Subscriber{
-
-    private ArrayList<Card> cards;
+public class Model{
+    private ArrayList<Subscriber> subs;
+    private Shoe shoe;
     private ArrayList<ArrayList<Card>> playerHands;
     private ArrayList<Card> dealerHand;
 
@@ -15,14 +15,21 @@ public class Model implements Subscriber{
     private boolean[] seatsPlayed = new boolean[seats];
 
     public Model() {
-        cards = new ArrayList<>();
+        subs = new ArrayList<>();
+        Shoe shoe = new Shoe();
+        shoe.shuffleShoe();
         playerHands = new ArrayList<>();
         dealerHand = new ArrayList<>();
     }
 
-
-    @Override
-    public void modelChanged() {
-
+    // add a subscriber to the list of subscribers
+    public void addSubscriber(Subscriber subscriber) {
+        subs.add(subscriber);
     }
+
+    //have all subscribers run their modelChanged method
+    public void notifySubscribers() {
+        subs.forEach(Subscriber::modelChanged);
+    }
+
 }
