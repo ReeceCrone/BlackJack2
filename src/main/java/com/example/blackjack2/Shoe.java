@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Shoe {
 
+    //keeps track of the index of the top card
     private int topCardIndex;
 
     //Our shoe will be made out of 6 decks of cards
@@ -15,6 +16,7 @@ public class Shoe {
     public Shoe() {
         topCardIndex = 0;
         cards = new ArrayList<Card>();
+        //creates all of the cards that would be in the shoe given the number of decks used
         for (int i = 0; i < shoeDecks; i++) {
             for (Card.Rank rank : Card.Rank.values()) {
                 for (Card.Suit suit : Card.Suit.values()) {
