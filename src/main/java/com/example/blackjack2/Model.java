@@ -7,6 +7,9 @@ public class Model{
     private Shoe shoe;
     private ArrayList<ArrayList<Card>> playerHands;
     private ArrayList<Card> dealerHand;
+    private ArrayList<Chip> chips;
+    private int next_chip_id, bankroll;
+
 
     //the number of spots that can be played at the blackjack table
     private final int seats = 3;
@@ -20,6 +23,18 @@ public class Model{
         shoe.shuffleShoe();
         playerHands = new ArrayList<>();
         dealerHand = new ArrayList<>();
+        chips = new ArrayList<>();
+        next_chip_id = 0;
+        bankroll = 50;
+        for (int i = 0; i < 10; i++) {
+            Chip chip = new Chip(next_chip_id, 5, 250, 300);
+            chips.add(chip);
+            next_chip_id++;
+        }
+    }
+
+    public ArrayList<Chip> getChips() {
+        return chips;
     }
 
     // add a subscriber to the list of subscribers
@@ -30,6 +45,10 @@ public class Model{
     //have all subscribers run their modelChanged method
     public void notifySubscribers() {
         subs.forEach(Subscriber::modelChanged);
+    }
+
+    public void hit (int seat) {
+
     }
 
 }
