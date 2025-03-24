@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -71,7 +72,14 @@ public class TableView extends BorderPane implements Subscriber {
         gc.setFill(Color.DARKOLIVEGREEN);
         gc.fillRect(0, 0, myCanvas.getWidth(), myCanvas.getHeight());
 
+
+
         // Draw game elements (cards, hands, etc.) here
+        Image chipImage = new Image(getClass().getResource("images/chip.png").toExternalForm());
+
+        for (Chip chip : model.getChips()) {
+            gc.drawImage(chipImage, chip.getX(), chip.getY(), chip.getWidth(), chip.getHeight());
+        }
     }
 
     @Override
