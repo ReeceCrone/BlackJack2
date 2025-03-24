@@ -1,6 +1,5 @@
 package com.example.blackjack2;
 
-
 import javafx.scene.input.MouseEvent;
 
 public class Controller {
@@ -9,7 +8,8 @@ public class Controller {
     private ControllerState currentState;
 
     public Controller() {
-        currentState = ready;
+        // Initialize to ready state
+        currentState = readyState;
     }
 
     public void setModel(Model m) {
@@ -32,18 +32,61 @@ public class Controller {
         currentState.handleReleased(event);
     }
 
-
+    // Define ControllerState as an abstract class that can be extended for different states
     private abstract class ControllerState {
-        void handlePressed(MouseEvent event) {}
-
-        void handleDragged(MouseEvent event) {}
-
-        void handleReleased(MouseEvent event) {}
+        abstract void handlePressed(MouseEvent event);
+        abstract void handleDragged(MouseEvent event);
+        abstract void handleReleased(MouseEvent event);
     }
 
-    ControllerState ready = new ControllerState() {
+    // Ready state (when the game is idle and ready for interaction)
+    ControllerState readyState = new ControllerState() {
+        @Override
+        void handlePressed(MouseEvent event) {
+            // Check if a chip is clicked for dragging
+            for (Chip chip : model.getChips()) {
+                if (chip.contains((int) event.getX(), (int) event.getY())) {
+                    iModel.setDraggedChip(chip);
+                    currentState = draggingState; // Transition to dragging state
+                    break;
+                }
+            }
+        }
 
+        @Override
+        void handleDragged(MouseEvent event) {
+            // In ready state, no dragging occurs
+        }
+
+        @Override
+        void handleReleased(MouseEvent event) {
+            // In ready state, nothing happens on release
+        }
     };
 
+    // Dragging state (when a chip is being dragged around)
+    ControllerState draggingState = new ControllerState() {
+        @Override
+        void handlePressed(MouseEvent event) {
+            // No action needed for pressed during dragging
+        }
 
+        @Override
+        void handleDragged(MouseEvent event) {
+            if (iModel.getDraggedChip() != null) {
+                iModel.dragChip((int) event.getX(), (int) event.getY());
+            }
+        }
+
+        @Override
+        void handleReleased(MouseEvent event) {
+            if (iModel.getDraggedChip() != null) {
+                iModel.setDraggedChip(null);
+                currentState = readyState; // Return to ready state after drag
+            }
+        }
+    };
+
+    // Reference to the chip currently being dragged
+    private Chip draggedChip = null;
 }

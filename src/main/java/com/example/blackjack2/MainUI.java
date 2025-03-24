@@ -17,6 +17,8 @@ public class MainUI extends StackPane {
         controller.setModel(model);
         controller.setIModel(iModel);
 
+        tableView.draw();
+
         this.getChildren().add(tableView);
     }
 }

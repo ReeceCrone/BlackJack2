@@ -27,7 +27,7 @@ public class Shoe {
     }
 
     //deals the top card in the shoe and moves the topCardIndex ahead one
-    public Card dealCard() {
+    public Card drawCard() {
         int index = topCardIndex;
         topCardIndex++;
         return cards.get(index);
