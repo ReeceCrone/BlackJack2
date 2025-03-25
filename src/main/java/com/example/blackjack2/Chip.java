@@ -10,8 +10,8 @@ public class Chip {
     public Chip(int id, int value, int x, int y, Chip bottomChip) {
         this.id = id;
         this.value = value;
-        this.width = 60;
-        this.height = 30;
+        this.width = 100;
+        this.height = 60;
         this.bottomChip = bottomChip;
         this.topChip = null;
 
@@ -101,12 +101,12 @@ public class Chip {
     }
 
     public boolean contains(int x, int y) {
-        if (topChip != null) {
-            System.out.println(this.id);
-            if (topChip.contains(x, y)) {
-                return false;
-            }
-        }
+//        if (topChip != null) {
+//            System.out.println(this.id);
+//            if (topChip.contains(x, y)) {
+//                return false;
+//            }
+//        }
         return x >= this.x && x <= this.x + width &&
                     y >= this.y && y <= this.y + height;
     }
