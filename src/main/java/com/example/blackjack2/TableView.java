@@ -69,7 +69,8 @@ public class TableView extends BorderPane implements Subscriber {
             double amountInStacks = 0;
             ChipStack stack = model.getStackForChip(chip);
             if (stack != null) {
-                for (int i = 0; stack.getChildren().indexOf(chip) >= i; i++) {
+                for (int i = stack.getChildren().indexOf(chip); stack.getChildren().size() > i; i++) {
+                    System.out.print(stack.getChildren().indexOf(chip));
                     Stackable element = stack.getChildren().get(i);
                     if (element instanceof Chip) {
                         amountInStacks += ((Chip) element).getValue();
