@@ -118,8 +118,8 @@ public class Model {
             // If the target is another Chip, merge the two chips into a new stack
             else if (targetChip instanceof Chip) {
                 List<Stackable> newStackables = new ArrayList<>();
-                newStackables.add((Chip) movingChip);
                 newStackables.add((Chip) targetChip);
+                newStackables.add((Chip) movingChip);
                 ChipStack newStack = new ChipStack((ArrayList<Stackable>) newStackables);
                 stackables.add(newStack); // Add the new stack to the model
                 stackables.remove(movingChip); // Remove the moving chip
