@@ -91,8 +91,8 @@ public class Controller {
         if (currentState == State.DRAGGING) {
             Optional<Stackable> nearest = model.getNearestStackable(e.getX(), e.getY(), selected);
 
-            if (nearest.isPresent() && nearest.get() instanceof Chip) {
-                Chip targetChip = (Chip) nearest.get();
+            if (nearest.isPresent()) {
+                Stackable targetChip = nearest.get();
                 model.mergeChips(selected, targetChip);
             }
 
