@@ -81,6 +81,7 @@ public class Controller {
         if (currentState == State.DRAGGING) {
 
             Optional<Stackable> nearest = model.getNearestStackable(e.getX(), e.getY(), iModel.getSelectedComponent());
+            System.out.println(nearest);
 
             if (nearest.isPresent()) {
                 Stackable targetChip = nearest.get();

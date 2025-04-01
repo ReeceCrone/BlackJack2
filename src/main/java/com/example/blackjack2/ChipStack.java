@@ -13,28 +13,33 @@ public class ChipStack implements Stackable {
         this.y = children.get(0).getY();
         this.children = new ArrayList<>();
         for (Stackable child : children) {
-            addChild(child);
+            addChild(child);  // Properly set the initial Y-position of each chip
         }
     }
 
     public void addChild(Stackable child) {
         children.add(child);
         int stackHeight = children.size();
-
-        // Adjust the Y-coordinate to stack chips vertically.
-        // Instead of moving chips downward (negative offset), we move them upward.
-        child.setY(y - (stackHeight * 15) + 15);  // Stack chips with a 15 unit offset
-        child.setX(x);
+        child.setY(this.y + (- 15 * stackHeight)); // Adjust Y relative to stack's position
+        child.setX(this.x);  // Ensure X is aligned with the stack
     }
 
     @Override
     public void setX(double x) {
         this.x = x;
+        // Update the X position of all child chips
+        for (Stackable child : children) {
+            child.setX(x);
+        }
     }
 
     @Override
     public void setY(double y) {
         this.y = y;
+        // Update the Y position of all child chips
+        for (Stackable child : children) {
+            child.setY(y + (- 15 * children.indexOf(child)));
+        }
     }
 
     public void removeChild(Chip child) {
@@ -48,7 +53,7 @@ public class ChipStack implements Stackable {
 
     @Override
     public List<Stackable> getChildren() {
-        return children; // Return a copy to prevent modification.
+        return children;
     }
 
     @Override
@@ -63,6 +68,9 @@ public class ChipStack implements Stackable {
 
     @Override
     public void move(double dx, double dy) {
+        // Move all children relative to the stack's new position
+        this.x += dx;
+        this.y += dy;
         for (Stackable child : children) {
             child.move(dx, dy);
         }
@@ -76,8 +84,5 @@ public class ChipStack implements Stackable {
             }
         }
         return false;
-
     }
-
-
 }

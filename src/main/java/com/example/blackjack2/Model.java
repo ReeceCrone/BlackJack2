@@ -21,15 +21,17 @@ public class Model {
     private void initializeChips() {
         ArrayList<Stackable> newStackables = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            Chip chip = new Chip(5 + i, 250, 250 - (i * 5)); // Offset Y
+            Chip chip = new Chip(5, 250, 250 - (i * 5)); // Offset Y
             newStackables.add(chip);
         }
         Chip chip = new Chip(5, 450, 250);
-        Chip chip2 = new Chip(5, 550, 250);
+        Chip chip2 = new Chip(10, 550, 250);
+        Chip chip3 = new Chip(25, 250, 400);
         ChipStack initialStack = new ChipStack(newStackables);
         stackables.add(initialStack);
         stackables.add(chip);
         stackables.add(chip2);
+        stackables.add(chip3);
     }
 
     public List<Stackable> getStackables() {
@@ -109,6 +111,7 @@ public class Model {
         else if (movingChip instanceof Chip) {
             // If the target is a ChipStack, add the moving chip to the stack
             if (targetChip instanceof ChipStack) {
+                System.out.println("helloo");
                 ((ChipStack) targetChip).addChild((Chip) movingChip);
                 stackables.remove(movingChip); // Remove the chip from the stackables after adding it
             }
