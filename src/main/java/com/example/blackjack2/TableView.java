@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class TableView extends BorderPane implements Subscriber {
     private Model model;
@@ -60,6 +61,27 @@ public class TableView extends BorderPane implements Subscriber {
     private void drawChip(Chip chip) {
         Image imgToUse = (iModel != null && iModel.getHoveredComponent() == chip) ? chipImageHovered : chipImage;
         gc.drawImage(imgToUse, chip.getX(), chip.getY(), 100, 60);
+        if (iModel.getHoveredComponent() == chip) {
+            // Draw text (e.g., "$") centered relative to the chip
+            double textX = chip.getX() + 105;  // Center text horizontally
+            double textY = chip.getY() + (30) + 5; // Adjust vertically
+            gc.setFill(Color.BLACK);
+            double amountInStacks = 0;
+            ChipStack stack = model.getStackForChip(chip);
+            if (stack != null) {
+                for (int i = 0; stack.getChildren().indexOf(chip) >= i; i++) {
+                    Stackable element = stack.getChildren().get(i);
+                    if (element instanceof Chip) {
+                        amountInStacks += ((Chip) element).getValue();
+                    }
+                }
+            } else {
+                amountInStacks = chip.getValue();
+            }
+
+            gc.setFont(new Font("Arial", 20)); // Adjust the font size to 30 (you can make it larger or smaller as needed)
+            gc.fillText("$" + amountInStacks, textX, textY);
+        }
     }
 
     private void drawChipStack(ChipStack stack) {
