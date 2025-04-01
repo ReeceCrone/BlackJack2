@@ -4,8 +4,8 @@ import java.util.List;
 
 public class Chip implements Stackable {
     private double value, x, y;
-    private int width = 100;
-    private int height = 60;
+    private int width = 80;
+    private int height = 48;
 
     public Chip(int v, int x, int y) {
         this.value = v;

@@ -2,10 +2,12 @@ package com.example.blackjack2;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
 
 public class TableView extends BorderPane implements Subscriber {
     private Model model;
@@ -19,7 +21,9 @@ public class TableView extends BorderPane implements Subscriber {
         canvas = new Canvas(1000, 540);
         gc = canvas.getGraphicsContext2D();
 
+
         chipImage5 = new Image(getClass().getResource("images/chip.png").toExternalForm());
+
         chipImage10 = new Image(getClass().getResource("images/chip2.png").toExternalForm());
         chipImage25 = new Image(getClass().getResource("images/chip4.png").toExternalForm());
         chipImageHovered = new Image(getClass().getResource("images/chip3.png").toExternalForm());
@@ -46,6 +50,7 @@ public class TableView extends BorderPane implements Subscriber {
     }
 
     public void draw() {
+
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setFill(Color.DARKOLIVEGREEN);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -77,11 +82,11 @@ public class TableView extends BorderPane implements Subscriber {
         if (iModel != null && iModel.getHoveredComponent() == chip) {
             imgToUse = chipImageHovered;
         }
-        gc.drawImage(imgToUse, chip.getX(), chip.getY(), 100, 60);
+        gc.drawImage(imgToUse, chip.getX(), chip.getY(), 80, 48);
         if (iModel.getHoveredComponent() == chip) {
             // Draw text (e.g., "$") centered relative to the chip
-            double textX = chip.getX() + 105;  // Center text horizontally
-            double textY = chip.getY() + (30) + 5; // Adjust vertically
+            double textX = chip.getX() + 85;  // Center text horizontally
+            double textY = chip.getY() + (24) + 5; // Adjust vertically
             gc.setFill(Color.BLACK);
             double amountInStacks = 0;
             ChipStack stack = model.getStackForChip(chip);
@@ -97,7 +102,7 @@ public class TableView extends BorderPane implements Subscriber {
                 amountInStacks = chip.getValue();
             }
 
-            gc.setFont(new Font("Arial", 20)); // Adjust the font size to 30 (you can make it larger or smaller as needed)
+            gc.setFont(new Font("Arial", 10)); // Adjust the font size to 30 (you can make it larger or smaller as needed)
             gc.fillText("$" + amountInStacks, textX, textY);
         }
     }

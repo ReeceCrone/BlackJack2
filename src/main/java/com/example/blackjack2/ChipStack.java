@@ -20,7 +20,7 @@ public class ChipStack implements Stackable {
     public void addChild(Stackable child) {
         children.add(child);
         int stackHeight = children.size();
-        child.setY(this.y + (- 15 * stackHeight)); // Adjust Y relative to stack's position
+        child.setY(this.y + (- 10 * stackHeight)); // Adjust Y relative to stack's position
         child.setX(this.x);  // Ensure X is aligned with the stack
     }
 
@@ -38,7 +38,7 @@ public class ChipStack implements Stackable {
         this.y = y;
         // Update the Y position of all child chips
         for (Stackable child : children) {
-            child.setY(y + (- 15 * children.indexOf(child)));
+            child.setY(y + (- 10 * children.indexOf(child)));
         }
     }
 
