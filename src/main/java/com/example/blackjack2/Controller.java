@@ -40,7 +40,7 @@ public class Controller {
                         break;
                     }
                 } else if (s instanceof ChipStack) {
-                    for (Stackable child : s.getChildren()) {
+                    for (Stackable child : s.getChildren().reversed()) {
                         if (child.onElement(e.getX(), e.getY())) {
                             hovered = child;
                             break;

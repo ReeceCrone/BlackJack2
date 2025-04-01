@@ -9,6 +9,8 @@ public interface Stackable {
     List<Stackable> getChildren();
     public double getX();
     public double getY();
+    public void setX(double x);
+    public void setY(double y);
     public void move(double x, double y);
     public boolean onElement(double x, double y);
 }

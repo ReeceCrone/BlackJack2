@@ -24,6 +24,14 @@ public class Chip implements Stackable {
         return y;
     }
 
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
     @Override
     public boolean isStack() {
         return false;

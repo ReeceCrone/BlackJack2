@@ -13,12 +13,26 @@ public class ChipStack implements Stackable {
         this.y = children.get(0).getY();
         this.children = new ArrayList<>();
         for (Stackable child : children) {
-            this.children.add(child);
+            addChild(child);
         }
     }
 
     public void addChild(Stackable child) {
+
         children.add(child);
+        int stackHeight = children.size();
+        child.setY(x + (- 15 * stackHeight));
+        child.setX(x);
+    }
+
+    @Override
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    @Override
+    public void setY(double y) {
+        this.y = y;
     }
 
     public void removeChild(Stackable child) {
@@ -32,7 +46,7 @@ public class ChipStack implements Stackable {
 
     @Override
     public List<Stackable> getChildren() {
-        return new ArrayList<>(children); // Return a copy to prevent modification.
+        return children; // Return a copy to prevent modification.
     }
 
     @Override
@@ -55,6 +69,7 @@ public class ChipStack implements Stackable {
     @Override
     public boolean onElement(double x, double y) {
         for (Stackable child : children) {
+            System.out.println(child.getY());
             if (child.onElement(x, y)) {
                 return true;
             }

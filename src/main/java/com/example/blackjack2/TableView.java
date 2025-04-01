@@ -49,7 +49,8 @@ public class TableView extends BorderPane implements Subscriber {
 
         for (Stackable stackable : model.getStackables()) {
             if (stackable instanceof ChipStack) {
-                drawChipStack((ChipStack) stackable);
+                ChipStack stack = (ChipStack) stackable;
+                drawChipStack(stack);
             } else if (stackable instanceof Chip) {
                 drawChip((Chip) stackable);
             }
@@ -57,13 +58,17 @@ public class TableView extends BorderPane implements Subscriber {
     }
 
     private void drawChip(Chip chip) {
-        Image imgToUse = (iModel.getHoveredComponent() == chip) ? chipImageHovered : chipImage;
-        System.out.println(iModel.getHoveredComponent() + "," + chip);
+        Image imgToUse = (iModel != null && iModel.getHoveredComponent() == chip) ? chipImageHovered : chipImage;
+        if (iModel.getHoveredComponent() == chip) {
+            System.out.println(chip.getValue());
+        }
         gc.drawImage(imgToUse, chip.getX(), chip.getY(), 100, 60);
     }
 
     private void drawChipStack(ChipStack stack) {
+
         for (Stackable chip : stack.getChildren()) {
+
             drawChip((Chip) chip);
         }
     }

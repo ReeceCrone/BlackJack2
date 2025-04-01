@@ -19,10 +19,9 @@ public class Model {
     }
 
     private void initializeChips() {
-
         ArrayList<Stackable> newStackables = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
-            Chip chip = new Chip(5, 250, 250);
+        for (int i = 0; i < 5; i++) {
+            Chip chip = new Chip(5 + i, 250, 250 - (i * 5)); // Offset Y
             newStackables.add(chip);
         }
         ChipStack initialStack = new ChipStack(newStackables);
