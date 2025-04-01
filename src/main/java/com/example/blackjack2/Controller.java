@@ -94,8 +94,6 @@ public class Controller {
             if (nearest.isPresent() && nearest.get() instanceof Chip) {
                 Chip targetChip = (Chip) nearest.get();
                 model.mergeChips(selected, targetChip);
-            } else if (wasInStack) {
-                model.createNewStack(selected);
             }
 
             currentState = State.READY;

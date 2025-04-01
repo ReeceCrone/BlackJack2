@@ -35,7 +35,7 @@ public class ChipStack implements Stackable {
         this.y = y;
     }
 
-    public void removeChild(Stackable child) {
+    public void removeChild(Chip child) {
         children.remove(child);
     }
 
