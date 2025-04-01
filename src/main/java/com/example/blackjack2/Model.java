@@ -95,9 +95,10 @@ public class Model {
                 // Create a new ChipStack with the moving stack's chips + the target chip
                 List<Stackable> newStackables = new ArrayList<>();
                 List<Stackable> chips = movingChip.getChildren();
-                newStackables.addAll(chips); // Add all chips from the moving stack
                 newStackables.add((Chip) targetChip); // Add the target chip to the new stack
+                newStackables.addAll(chips); // Add all chips from the moving stack
 
+                System.out.println(newStackables.get(0).getY());
                 ChipStack newStack = new ChipStack((ArrayList<Stackable>) newStackables);
                 stackables.add(newStack); // Add the new stack to the model
                 stackables.remove(movingChip); // Remove the old stack

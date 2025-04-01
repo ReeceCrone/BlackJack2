@@ -18,10 +18,12 @@ public class ChipStack implements Stackable {
     }
 
     public void addChild(Stackable child) {
-
         children.add(child);
         int stackHeight = children.size();
-        child.setY(x + (- 15 * stackHeight));
+
+        // Adjust the Y-coordinate to stack chips vertically.
+        // Instead of moving chips downward (negative offset), we move them upward.
+        child.setY(y - (stackHeight * 15) + 15);  // Stack chips with a 15 unit offset
         child.setX(x);
     }
 
@@ -69,7 +71,6 @@ public class ChipStack implements Stackable {
     @Override
     public boolean onElement(double x, double y) {
         for (Stackable child : children) {
-            System.out.println(child.getY());
             if (child.onElement(x, y)) {
                 return true;
             }

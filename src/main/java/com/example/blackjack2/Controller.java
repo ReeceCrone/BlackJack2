@@ -11,9 +11,7 @@ public class Controller {
     private Model model;
     private InteractionModel iModel;
     private TableView view;
-    private Stackable selected;
     private double lastX, lastY;
-    private boolean wasInStack = false;  // Track if the chip was originally in a stack
 
     public Controller(Model model, InteractionModel iModel, TableView view) {
         this.model = model;
@@ -56,18 +54,10 @@ public class Controller {
         if (currentState == State.READY) {
             for (Stackable s : model.getStackables()) {
                 if (s.onElement(e.getX(), e.getY())) {
-                    selected = s;
                     iModel.setSelectedComponent(s);
                     lastX = e.getX();
                     lastY = e.getY();
 
-                    // Check if selected is a chip inside a stack
-                    if (s instanceof Chip && model.isChipInStack((Chip) s)) {
-                        wasInStack = true;
-                        model.removeChipFromStack((Chip) s);
-                    } else {
-                        wasInStack = false;
-                    }
 
                     currentState = State.DRAGGING;
                     break;
@@ -77,10 +67,10 @@ public class Controller {
     }
 
     private void handleDragged(MouseEvent e) {
-        if (currentState == State.DRAGGING && selected != null) {
+        if (currentState == State.DRAGGING) {
             double dx = e.getX() - lastX;
             double dy = e.getY() - lastY;
-            selected.move(dx, dy);
+            iModel.getSelectedComponent().move(dx, dy);
             lastX = e.getX();
             lastY = e.getY();
             model.notifySubscribers();
@@ -89,15 +79,15 @@ public class Controller {
 
     private void handleReleased(MouseEvent e) {
         if (currentState == State.DRAGGING) {
-            Optional<Stackable> nearest = model.getNearestStackable(e.getX(), e.getY(), selected);
+
+            Optional<Stackable> nearest = model.getNearestStackable(e.getX(), e.getY(), iModel.getSelectedComponent());
 
             if (nearest.isPresent()) {
                 Stackable targetChip = nearest.get();
-                model.mergeChips(selected, targetChip);
+                model.mergeChips(iModel.getSelectedComponent(), targetChip);
             }
 
             currentState = State.READY;
-            selected = null;
             iModel.setSelectedComponent(null);
             model.notifySubscribers();
         }
