@@ -58,7 +58,8 @@ public class TableView extends BorderPane implements Subscriber {
 
     private void drawChip(Chip chip) {
         Image imgToUse = (iModel.getHoveredComponent() == chip) ? chipImageHovered : chipImage;
-        gc.drawImage(imgToUse, chip.getX(), chip.getY(), 50, 50);
+        System.out.println(iModel.getHoveredComponent() + "," + chip);
+        gc.drawImage(imgToUse, chip.getX(), chip.getY(), 100, 60);
     }
 
     private void drawChipStack(ChipStack stack) {

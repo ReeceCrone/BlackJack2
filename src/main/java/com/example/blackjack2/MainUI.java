@@ -23,12 +23,6 @@ public class MainUI extends Application {
         stage.setTitle("Blackjack Chips");
         stage.show();
 
-        // Test: Add some chips and stacks
-        Chip chip1 = new Chip(10, 100, 100);
-        Chip chip2 = new Chip(20, 180, 100);
-        ChipStack stack = new ChipStack(new ArrayList<>(List.of(chip1, chip2)));
-
-        model.addStackable(stack);
     }
 
     public static void main(String[] args) {

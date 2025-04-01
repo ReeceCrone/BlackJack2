@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InteractionModel {
-    private Stackable hoveredComponent;
+    private Chip hoveredComponent;
     private Stackable selectedComponent;
     private List<Subscriber> subscribers;
 
@@ -12,12 +12,12 @@ public class InteractionModel {
         subscribers = new ArrayList<>();
     }
 
-    public void setHoveredComponent(Stackable component) {
+    public void setHoveredComponent(Chip component) {
         hoveredComponent = component;
         notifySubscribers();
     }
 
-    public Stackable getHoveredComponent() {
+    public Chip getHoveredComponent() {
         return hoveredComponent;
     }
 

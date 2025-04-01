@@ -36,8 +36,8 @@ public class Chip implements Stackable {
 
     @Override
     public void move(double dx, double dy) {
-        x = dx;
-        y = dy;
+        x += dx;
+        y += dy;
     }
 
 
