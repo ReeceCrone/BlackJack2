@@ -121,22 +121,24 @@ public class Controller {
         @Override
         void handleReleased(MouseEvent event) {
             if (iModel.getDraggedChip() != null) {
+                Chip draggedChip = iModel.getDraggedChip();
                 Chip targetChip = null;
+
                 for (Chip chip : model.getChips()) {
-                    if (chip != iModel.getDraggedChip() && chip.contains((int) event.getX(), (int) event.getY())
-                    && chip.getTopChip() == null) {
+                    if (chip != draggedChip && chip.contains((int) event.getX(), (int) event.getY()) && chip.getTopChip() == null) {
                         targetChip = chip;
                         break;
                     }
                 }
+
                 if (targetChip != null) {
-                    targetChip.setTopChip(iModel.getDraggedChip());
+                    // Set the new stacking relationship
+                    targetChip.setTopChip(draggedChip);
                 }
 
-
                 iModel.setDraggedChip(null);
-
-                currentState = readyState; // Return to ready state after drag
+                model.notifySubscribers();
+                currentState = readyState; // Return to ready state
             }
         }
 

@@ -15,10 +15,12 @@ public class InteractionModel {
 
     public void setDraggedChip(Chip draggedChip) {
         this.draggedChip = draggedChip;
+        notifySubscribers();
     }
 
     public void setHoveredChip(Chip hoveredChip) {
         this.hoveredChip = hoveredChip;
+        notifySubscribers();
     }
 
     public Chip getDraggedChip() {
@@ -29,9 +31,6 @@ public class InteractionModel {
         return hoveredChip;
     }
 
-    public void deselectChip() {
-        draggedChip = null;
-    }
 
     public void dragChip(int dX, int dY) {
         if (draggedChip != null) {

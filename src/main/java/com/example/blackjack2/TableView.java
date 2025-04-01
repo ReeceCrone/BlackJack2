@@ -12,6 +12,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TableView extends BorderPane implements Subscriber {
 
@@ -72,42 +74,28 @@ public class TableView extends BorderPane implements Subscriber {
     }
 
     public void draw() {
-        chipsDrawn = new ArrayList<>();
-        // Clear the canvas before redrawing
+        chipsDrawn = new ArrayList<>();  // Reset before drawing
+
         gc.clearRect(0, 0, myCanvas.getWidth(), myCanvas.getHeight());
         gc.setFill(Color.DARKOLIVEGREEN);
         gc.fillRect(0, 0, myCanvas.getWidth(), myCanvas.getHeight());
 
-        // Load chip image (from resources folder)
         Image chipImage = new Image(getClass().getResource("images/chip.png").toExternalForm());
         Image chipImage2 = new Image(getClass().getResource("images/chip2.png").toExternalForm());
 
-        // Loop through each chip in the model's chip list
+        Set<Chip> drawnStacks = new HashSet<>();  // ✅ Prevent duplicate stacks
+
         for (Chip chip : model.getChips()) {
-            // Start with the bottom chip and draw it
-            Chip currentChip = chip;
+            if (chip.getBottomChip() == null && !drawnStacks.contains(chip)) {  // ✅ Only draw stack once
+                Chip currentChip = chip;
 
-            // Only draw if it's the bottom chip (no bottom chip)
-            if (currentChip.getBottomChip() == null) {
-                // Draw the chip at its current position
-                if (iModel.getHoveredChip() == currentChip) {
-                    gc.drawImage(chipImage2, currentChip.getX(), currentChip.getY(), currentChip.getWidth(), currentChip.getHeight());
-                } else {
-                    gc.drawImage(chipImage, currentChip.getX(), currentChip.getY(), currentChip.getWidth(), currentChip.getHeight());
-                }
-                chipsDrawn.add(currentChip.getId());
+                while (currentChip != null) {
+                    Image imgToUse = (iModel.getHoveredChip() == currentChip) ? chipImage2 : chipImage;
+                    gc.drawImage(imgToUse, currentChip.getX(), currentChip.getY(), currentChip.getWidth(), currentChip.getHeight());
 
-                // Move through the stack, drawing each chip
-                while (currentChip.getTopChip() != null) {
-                    currentChip = currentChip.getTopChip(); // Move to the next chip in the stack
-                    if (!chipsDrawn.contains(currentChip.getId())) { // Prevent redrawing the same chip
-                        if (iModel.getHoveredChip() == currentChip) {
-                            gc.drawImage(chipImage2, currentChip.getX(), currentChip.getY(), currentChip.getWidth(), currentChip.getHeight());
-                        } else {
-                            gc.drawImage(chipImage, currentChip.getX(), currentChip.getY(), currentChip.getWidth(), currentChip.getHeight());
-                        }
-                        chipsDrawn.add(currentChip.getId());
-                    }
+                    chipsDrawn.add(currentChip.getId());
+                    drawnStacks.add(currentChip);  // ✅ Mark chip as drawn
+                    currentChip = currentChip.getTopChip();
                 }
             }
         }

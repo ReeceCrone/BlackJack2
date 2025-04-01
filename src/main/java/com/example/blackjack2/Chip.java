@@ -22,7 +22,8 @@ public class Chip {
         } else {
             // If there's a bottom chip, place this chip above it with a slight offset
             this.x = bottomChip.getX();  // Align the x position with the bottom chip
-            this.y = bottomChip.getY() - this.height - 5;  // Offset the y position by chip height + margin
+            this.y = bottomChip.getY() - this.height / 4;  // Offset the y position by chip height + margin
+            bottomChip.setTopChip(this);  // Bidirectional linking
         }
     }
 
@@ -48,6 +49,9 @@ public class Chip {
 
     public void setX(int x) {
         this.x = x;
+        if (topChip != null) {
+            topChip.setX(x);
+        }
     }
 
     public int getY() {
@@ -56,6 +60,9 @@ public class Chip {
 
     public void setY(int y) {
         this.y = y;
+        if (topChip != null) {
+            topChip.setY(y - (this.height / 4));  // Keep tight stack spacing
+        }
     }
 
     public Chip getBottomChip() {
@@ -68,14 +75,10 @@ public class Chip {
 
     public void setBottomChip(Chip bottomChip) {
         this.bottomChip = bottomChip;
-
         if (bottomChip != null) {
             this.x = bottomChip.getX();
-            this.y = bottomChip.getY() - 10;
-        } else {
-            // If there is no bottom chip, set the position to some default coordinates
-            this.x = 0;  // Or use whatever default value you want
-            this.y = 0;
+            this.y = bottomChip.getY() - (this.height / 4);  // Overlapping effect
+            bottomChip.topChip = this;
         }
     }
 
@@ -90,23 +93,17 @@ public class Chip {
 
 
     public void drag(int newX, int newY) {
-        // Update the position of the chip, centering it on the new mouse position
+        // Update chip position
         this.x = newX - width / 2;
         this.y = newY - height / 2;
 
-        // Also update the position of the top chip, if it exists
+        // Move the entire stack
         if (topChip != null) {
-            topChip.drag(newX, newY - 10);  // Keep the offset between chips
+            topChip.drag(newX, this.y - (this.height / 4));  // Keep close spacing
         }
     }
 
     public boolean contains(int x, int y) {
-//        if (topChip != null) {
-//            System.out.println(this.id);
-//            if (topChip.contains(x, y)) {
-//                return false;
-//            }
-//        }
         return x >= this.x && x <= this.x + width &&
                     y >= this.y && y <= this.y + height;
     }
