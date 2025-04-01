@@ -1,51 +1,43 @@
 package com.example.blackjack2;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InteractionModel {
-    private ArrayList<Subscriber> subs;
-    private Chip draggedChip;
-    private Chip hoveredChip;
+    private Stackable hoveredComponent;
+    private Stackable selectedComponent;
+    private List<Subscriber> subscribers;
 
     public InteractionModel() {
-        subs = new ArrayList<>();
-        draggedChip = null;
-        hoveredChip = null;
+        subscribers = new ArrayList<>();
     }
 
-    public void setDraggedChip(Chip draggedChip) {
-        this.draggedChip = draggedChip;
+    public void setHoveredComponent(Stackable component) {
+        hoveredComponent = component;
         notifySubscribers();
     }
 
-    public void setHoveredChip(Chip hoveredChip) {
-        this.hoveredChip = hoveredChip;
+    public Stackable getHoveredComponent() {
+        return hoveredComponent;
+    }
+
+    public void setSelectedComponent(Stackable component) {
+        selectedComponent = component;
         notifySubscribers();
     }
 
-    public Chip getDraggedChip() {
-        return draggedChip;
+    public Stackable getSelectedComponent() {
+        return selectedComponent;
     }
-
-    public Chip getHoveredChip() {
-        return hoveredChip;
-    }
-
-
-    public void dragChip(int dX, int dY) {
-        if (draggedChip != null) {
-            draggedChip.drag(dX, dY);
-            notifySubscribers();
-        }
-    }
-
 
     public void addSubscriber(Subscriber s) {
-        subs.add(s);
+        subscribers.add(s);
     }
 
-    public void notifySubscribers() {
-        subs.forEach(Subscriber::modelChanged);
+    private void notifySubscribers() {
+        for (Subscriber s : subscribers) {
+            s.modelChanged();
+        }
     }
-
 }
+

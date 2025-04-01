@@ -1,24 +1,38 @@
 package com.example.blackjack2;
 
-import javafx.scene.layout.StackPane;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class MainUI extends StackPane {
-    public MainUI() {
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainUI extends Application {
+    @Override
+    public void start(Stage stage) {
         Model model = new Model();
         InteractionModel iModel = new InteractionModel();
-        TableView tableView = new TableView();
-        Controller controller = new Controller();
+        TableView view = new TableView();
+        Controller controller = new Controller(model, iModel, view);
 
-        model.addSubscriber(tableView);
-        iModel.addSubscriber(tableView);
-        tableView.setInteractionModel(iModel);
-        tableView.setModel(model);
-        tableView.setupEvents(controller);
-        controller.setModel(model);
-        controller.setIModel(iModel);
+        view.setModel(model);
+        view.setInteractionModel(iModel);
 
-        tableView.draw();
+        Scene scene = new Scene(view);
+        stage.setScene(scene);
+        stage.setTitle("Blackjack Chips");
+        stage.show();
 
-        this.getChildren().add(tableView);
+        // Test: Add some chips and stacks
+        Chip chip1 = new Chip(10, 100, 100);
+        Chip chip2 = new Chip(20, 180, 100);
+        ChipStack stack = new ChipStack(new ArrayList<>(List.of(chip1, chip2)));
+
+        model.addStackable(stack);
+    }
+
+    public static void main(String[] args) {
+        launch();
     }
 }
+
