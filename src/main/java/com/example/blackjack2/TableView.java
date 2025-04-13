@@ -39,8 +39,8 @@ public class TableView extends BorderPane implements Subscriber {
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
     public TableView() {
-        setPrefSize(1000, 600);
-        canvas = new Canvas(1000, 540);
+        setPrefSize(1200, 800);
+        canvas = new Canvas(1200, 740);
         gc = canvas.getGraphicsContext2D();
 
         // Load chip images
@@ -137,7 +137,7 @@ public class TableView extends BorderPane implements Subscriber {
         double y = startY;
         for (Card card : cards) {
             Image cardImage = getCardImage(card);
-            gc.drawImage(cardImage, x, y, 71, 96);  // Draw each card with width 71px and height 96px
+            gc.drawImage(cardImage, x, y, 142, 192);  // Draw each card with width 71px and height 96px
             x += 80;  // Space between cards
         }
     }
@@ -146,7 +146,6 @@ public class TableView extends BorderPane implements Subscriber {
         // For face-up cards, return the card's image
         if (card.isFaceUp()) {
             String cardName = card.toString();
-            System.out.println(cardName);
             return new Image(getClass().getResource("images/cards/" + cardName + ".png").toExternalForm());
         } else {
             return cardBackImage;  // Face-down card
