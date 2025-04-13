@@ -12,14 +12,6 @@ import javafx.scene.layout.HBox;
 import java.text.DecimalFormat;
 
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-
-import java.text.DecimalFormat;
 import java.util.List;
 
 public class TableView extends BorderPane implements Subscriber {
@@ -137,7 +129,7 @@ public class TableView extends BorderPane implements Subscriber {
         double y = startY;
         for (Card card : cards) {
             Image cardImage = getCardImage(card);
-            gc.drawImage(cardImage, x, y, 142, 192);  // Draw each card with width 71px and height 96px
+            gc.drawImage(cardImage, card.getX(), card.getY(), 142, 192);  // Draw each card with width 71px and height 96px
             x += 80;  // Space between cards
         }
     }

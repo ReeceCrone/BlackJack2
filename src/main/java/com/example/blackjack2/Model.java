@@ -169,7 +169,7 @@ public class Model {
         card.setY(350);
         playerCards.add(card);
         card = shoe.drawCard();
-        card.setX(4400);
+        card.setX(440);
         card.setY(150);
         card.setFaceUp(false);
         dealerCards.add(card); // This one is face down
@@ -203,7 +203,7 @@ public class Model {
             Card card = shoe.drawCard();
             card.setX(400 + dealerCardCounter * 40);
             dealerCardCounter++;
-            card.setY(350);
+            card.setY(150);
             dealerCards.add(card);
         }
 
