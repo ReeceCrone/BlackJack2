@@ -56,6 +56,18 @@ public class ChipStack implements Stackable {
         return children;
     }
 
+    public ChipStack split(int index) {
+        ArrayList<Stackable> newChildren = new ArrayList<>();
+
+        // Move elements from this stack to the new stack starting at `index`
+        while (children.size() > index) {
+            Stackable removed = children.remove(index); // always remove at the same index
+            newChildren.add(removed);
+        }
+
+        return new ChipStack(newChildren); // new ChipStack constructor will handle position update
+    }
+
     @Override
     public double getX() {
         return this.x;

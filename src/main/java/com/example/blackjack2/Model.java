@@ -17,6 +17,8 @@ public class Model {
         subs = new ArrayList<>();
         playerCards = new ArrayList<>();
         dealerCards = new ArrayList<>();
+        dealerCarCounter = 0;
+        playerCarCounter = 0;
         shoe = new Shoe();
         shoe.shuffleShoe();
         initializeChips();
@@ -44,6 +46,10 @@ public class Model {
 
     public List<Stackable> getStackables() {
         return stackables;
+    }
+
+    public void addStackable(Stackable s) {
+        stackables.add(s);
     }
 
     public boolean isChipInStack(Chip chip) {

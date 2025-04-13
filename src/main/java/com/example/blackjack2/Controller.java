@@ -2,6 +2,7 @@ package com.example.blackjack2;
 
 import javafx.scene.input.MouseEvent;
 
+import java.util.List;
 import java.util.Optional;
 
 public class Controller {
@@ -53,18 +54,42 @@ public class Controller {
     private void handlePressed(MouseEvent e) {
         if (currentState == State.READY) {
             for (Stackable s : model.getStackables()) {
-                if (s.onElement(e.getX(), e.getY())) {
-                    iModel.setSelectedComponent(s);
-                    lastX = e.getX();
-                    lastY = e.getY();
-
-
-                    currentState = State.DRAGGING;
-                    break;
+                if (s instanceof ChipStack stack) {
+                    List<Stackable> children = stack.getChildren();
+                    for (int i = children.size() - 1; i >= 0; i--) {
+                        Stackable child = children.get(i);
+                        if (child.onElement(e.getX(), e.getY())) {
+                            if (i == 0) {
+                                // Bottom chip – treat like normal
+                                iModel.setSelectedComponent(stack);
+                            } else {
+                                // Not bottom chip – split!
+                                ChipStack newStack = stack.split(i);
+                                model.addStackable(newStack);
+                                iModel.setSelectedComponent(newStack);
+                            }
+                            lastX = e.getX();
+                            lastY = e.getY();
+                            currentState = State.DRAGGING;
+                            model.notifySubscribers();
+                            return;
+                        }
+                    }
+                } else {
+                    // Single chip
+                    if (s.onElement(e.getX(), e.getY())) {
+                        iModel.setSelectedComponent(s);
+                        lastX = e.getX();
+                        lastY = e.getY();
+                        currentState = State.DRAGGING;
+                        model.notifySubscribers();
+                        return;
+                    }
                 }
             }
         }
     }
+
 
     private void handleDragged(MouseEvent e) {
         if (currentState == State.DRAGGING) {
