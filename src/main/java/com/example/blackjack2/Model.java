@@ -10,15 +10,18 @@ public class Model {
     private List<Card> dealerCards;
     private Shoe shoe;
     private ArrayList<Subscriber> subs;
-    private int dealerCarCounter, playerCarCounter;
+    private int playerTotal, dealerTotal;
+    private int dealerCardCounter, playerCardCounter;
 
     public Model() {
         stackables = new ArrayList<>();
         subs = new ArrayList<>();
         playerCards = new ArrayList<>();
         dealerCards = new ArrayList<>();
-        dealerCarCounter = 0;
-        playerCarCounter = 0;
+        dealerCardCounter = 0;
+        playerCardCounter = 0;
+        dealerTotal = 0;
+        playerTotal = 0;
         shoe = new Shoe();
         shoe.shuffleShoe();
         initializeChips();
@@ -26,6 +29,13 @@ public class Model {
 
     public void addSubscriber(Subscriber s) {
         subs.add(s);
+    }
+
+    public List<Card> getPlayerCards() {
+        return this.playerCards;
+    }
+    public List<Card> getDealerCards() {
+        return this.dealerCards;
     }
 
     private void initializeChips() {
@@ -140,6 +150,96 @@ public class Model {
                 stackables.remove(targetChip); // Remove the target chip
             }
         }
+    }
+    public void deal() {
+        dealerCardCounter = 2;
+        playerCardCounter = 2;
+        playerCards.clear();
+        dealerCards.clear();
+        Card card = shoe.drawCard();
+        card.setX(400);
+        card.setY(350);
+        playerCards.add(card);
+        card = shoe.drawCard();
+        card.setX(400);
+        card.setY(150);
+        dealerCards.add(card);
+        card = shoe.drawCard();
+        card.setX(440);
+        card.setY(350);
+        playerCards.add(card);
+        card = shoe.drawCard();
+        card.setX(4400);
+        card.setY(150);
+        card.setFaceUp(false);
+        dealerCards.add(card); // This one is face down
+
+        notifySubscribers();
+    }
+
+    public void hit() {
+        if (getHandValue(playerCards) < 21) {
+            Card card = shoe.drawCard();
+            card.setX(400 + playerCardCounter * 40);
+            playerCardCounter++;
+            card.setY(350);
+            playerCards.add(card);
+            notifySubscribers();
+
+            if (getHandValue(playerCards) > 21) {
+                System.out.println("Player busts!");
+                // You can notify UI here that the game is over
+            }
+        }
+    }
+
+    public void stand() {
+        // Reveal dealer's face-down card
+
+        dealerCards.get(1).setFaceUp(true); // put cards face up
+        notifySubscribers();
+
+        while (getHandValue(dealerCards) < 17) {
+            Card card = shoe.drawCard();
+            card.setX(400 + dealerCardCounter * 40);
+            dealerCardCounter++;
+            card.setY(350);
+            dealerCards.add(card);
+        }
+
+        int playerTotal = getHandValue(playerCards);
+        int dealerTotal = getHandValue(dealerCards);
+
+        System.out.println("Player: " + playerTotal + ", Dealer: " + dealerTotal);
+
+        if (dealerTotal > 21 || playerTotal > dealerTotal) {
+            System.out.println("Player wins!");
+        } else if (playerTotal < dealerTotal) {
+            System.out.println("Dealer wins!");
+        } else {
+            System.out.println("Push (tie)");
+        }
+
+        notifySubscribers();
+    }
+
+    private int getHandValue(List<Card> hand) {
+        int value = 0;
+        int aces = 0;
+
+        for (Card card : hand) {
+            value += card.getValue(); // Should be 11 for Ace, 10 for face cards, else rank value
+            if (card.isAce()) {
+                aces++;
+            }
+        }
+
+        while (value > 21 && aces > 0) {
+            value -= 10; // Ace now counts as 1 instead of 11
+            aces--;
+        }
+
+        return value;
     }
 
 

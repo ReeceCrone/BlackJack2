@@ -27,7 +27,27 @@ public class Controller {
         view.getCanvas().setOnMousePressed(this::handlePressed);
         view.getCanvas().setOnMouseDragged(this::handleDragged);
         view.getCanvas().setOnMouseReleased(this::handleReleased);
+        view.getDealButton().setOnAction(e -> handleDeal());
+        view.getHitButton().setOnAction(e -> handleHit());
+        view.getStandButton().setOnAction(e -> handleStand());
     }
+
+    private void handleDeal() {
+        model.deal();
+        model.notifySubscribers();
+    }
+
+    private void handleHit() {
+        model.hit();
+        model.notifySubscribers();
+    }
+
+    private void handleStand() {
+        model.stand();
+        model.notifySubscribers();
+    }
+
+
 
     private void handleMoved(MouseEvent e) {
         if (currentState == State.READY) {

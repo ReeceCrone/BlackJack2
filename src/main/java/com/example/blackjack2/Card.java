@@ -10,12 +10,22 @@ public class Card {
     private double x, y;
     private double width = 80;
     private double height = 120;
+    private boolean faceUp;
 
     public Card(Rank rank, Suit suit, double x, double y) {
         this.rank = rank;
         this.suit = suit;
         this.x = x;
         this.y = y;
+        this.faceUp = true;
+    }
+
+    public void setFaceUp(boolean faceUp) {
+        this.faceUp = faceUp;
+    }
+
+    public boolean isFaceUp() {
+        return faceUp;
     }
 
     public double getX() { return x; }
@@ -30,7 +40,10 @@ public class Card {
 
     public void setY(double y) { this.y = y; }
 
-
+    public boolean isAce() {
+        if (rank == Rank.ACE) return true;
+        return false;
+    }
 
     public String getRank() {
         return rank.toString();
@@ -136,7 +149,7 @@ public class Card {
             default:
                 throw new IllegalArgumentException("Unknown suit: " + suit);
         }
-        return card_rank + "_of_ " + card_suit;
+        return card_rank + "_of_" + card_suit;
     }
 
 
