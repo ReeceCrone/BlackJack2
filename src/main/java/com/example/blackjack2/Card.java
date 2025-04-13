@@ -6,11 +6,31 @@ public class Card {
 
     private Rank rank;
     private Suit suit;
+    private int value;
+    private double x, y;
+    private double width = 80;
+    private double height = 120;
 
-    public Card(Rank rank, Suit suit) {
+    public Card(Rank rank, Suit suit, double x, double y) {
         this.rank = rank;
         this.suit = suit;
+        this.x = x;
+        this.y = y;
     }
+
+    public double getX() { return x; }
+
+    public double getY() { return y; }
+
+    public double getWidth() { return width; }
+
+    public double getHeight() { return height; }
+
+    public void setX(double x) { this.x = x; }
+
+    public void setY(double y) { this.y = y; }
+
+
 
     public String getRank() {
         return rank.toString();
@@ -49,22 +69,95 @@ public class Card {
                 throw new IllegalArgumentException("Unknown rank: " + rank);
         }
     }
+
+    public boolean onElement(double x, double y) {
+        return x >= this.x && x <= this.x + width && y >= this.y && y <= this.y + height;
+    }
+
+    public String toString() {
+        String card_rank;
+        String card_suit;
+        switch (rank) {
+            case ACE:
+                card_rank = "ace";
+                break;
+            case TWO:
+                card_rank = "2";
+                break;
+            case THREE:
+                card_rank = "3";
+                break;
+            case FOUR:
+                card_rank = "4";
+                break;
+            case FIVE:
+                card_rank = "5";
+                break;
+            case SIX:
+                card_rank = "6";
+                break;
+            case SEVEN:
+                card_rank = "7";
+                break;
+            case EIGHT:
+                card_rank = "8";
+                break;
+            case NINE:
+                card_rank = "9";
+                break;
+            case TEN:
+                card_rank = "10";
+                break;
+            case JACK:
+                card_rank = "jack";
+                break;
+            case QUEEN:
+                card_rank = "queen";
+                break;
+            case KING:
+                card_rank = "king";
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown rank: " + rank);
+        }
+        switch (suit) {
+            case SPADES:
+                card_suit = "spades";
+                break;
+            case CLUBS:
+                card_suit = "clubs";
+                break;
+            case DIAMONDS:
+                card_suit = "diamonds";
+                break;
+            case HEARTS:
+                card_suit = "hearts";
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown suit: " + suit);
+        }
+        return card_rank + "_of_ " + card_suit;
+    }
+
+
+
+
     public static void main(String[] args) {
         try {
             // Test 1: Check ACE card properties
-            Card card1 = new Card(Card.Rank.ACE, Card.Suit.HEARTS);
+            Card card1 = new Card(Card.Rank.ACE, Card.Suit.HEARTS, 0, 0);
             assert card1.getRank().equals("ACE");
             assert card1.getSuit().equals("HEARTS");
             assert card1.getValue() == 1;
 
             // Test 2: Check KING card properties
-            Card card2 = new Card(Card.Rank.KING, Card.Suit.SPADES);
+            Card card2 = new Card(Card.Rank.KING, Card.Suit.SPADES, 0, 0);
             assert card2.getRank().equals("KING");
             assert card2.getSuit().equals("SPADES");
             assert card2.getValue() == 10;
 
             // Test 3: Check FIVE card properties
-            Card card3 = new Card(Card.Rank.FIVE, Card.Suit.DIAMONDS);
+            Card card3 = new Card(Card.Rank.FIVE, Card.Suit.DIAMONDS, 0, 0);
             assert card3.getRank().equals("FIVE");
             assert card3.getSuit().equals("DIAMONDS");
             assert card3.getValue() == 5;
@@ -74,7 +167,7 @@ public class Card {
             Card.Suit testSuit = Card.Suit.CLUBS;
             int i = 0;
             for (Card.Rank rank : Card.Rank.values()) {
-                Card testCard = new Card(rank, testSuit);
+                Card testCard = new Card(rank, testSuit, 0, 0);
                 assert testCard.getValue() == expectedValues[i];
                 i++;
             }

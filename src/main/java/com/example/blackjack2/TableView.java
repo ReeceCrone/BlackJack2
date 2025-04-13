@@ -2,11 +2,12 @@ package com.example.blackjack2;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import java.text.DecimalFormat;
 
 
 public class TableView extends BorderPane implements Subscriber {
@@ -16,6 +17,8 @@ public class TableView extends BorderPane implements Subscriber {
     private GraphicsContext gc;
     private Image chipImage5, chipImage10, chipImage25, chipImageHovered;
 
+    private static final DecimalFormat df = new DecimalFormat("0.00");
+
     public TableView() {
         setPrefSize(1000, 600);
         canvas = new Canvas(1000, 540);
@@ -23,7 +26,6 @@ public class TableView extends BorderPane implements Subscriber {
 
 
         chipImage5 = new Image(getClass().getResource("images/chip.png").toExternalForm());
-
         chipImage10 = new Image(getClass().getResource("images/chip2.png").toExternalForm());
         chipImage25 = new Image(getClass().getResource("images/chip4.png").toExternalForm());
         chipImageHovered = new Image(getClass().getResource("images/chip3.png").toExternalForm());
@@ -85,7 +87,7 @@ public class TableView extends BorderPane implements Subscriber {
         gc.drawImage(imgToUse, chip.getX(), chip.getY(), 80, 48);
         if (iModel.getHoveredComponent() == chip) {
             // Draw text (e.g., "$") centered relative to the chip
-            double textX = chip.getX() + 85;  // Center text horizontally
+            double textX = chip.getX() + 90;  // Center text horizontally
             double textY = chip.getY() + (24) + 5; // Adjust vertically
             gc.setFill(Color.BLACK);
             double amountInStacks = 0;
@@ -103,7 +105,10 @@ public class TableView extends BorderPane implements Subscriber {
             }
 
             gc.setFont(new Font("Arial", 10)); // Adjust the font size to 30 (you can make it larger or smaller as needed)
-            gc.fillText("$" + amountInStacks, textX, textY);
+            double[] xPoints = {textX - 10, textX - 2, textX - 2}; // X coordinates of the triangle
+            double[] yPoints = {textY - 3, textY - 8, textY + 2}; // Y coordinates of the triangle
+            gc.fillPolygon(xPoints, yPoints, 3);
+            gc.fillText("$" + df.format(amountInStacks), textX, textY);
         }
     }
 

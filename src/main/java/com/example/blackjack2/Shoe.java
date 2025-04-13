@@ -20,7 +20,7 @@ public class Shoe {
         for (int i = 0; i < shoeDecks; i++) {
             for (Card.Rank rank : Card.Rank.values()) {
                 for (Card.Suit suit : Card.Suit.values()) {
-                    cards.add(new Card(rank, suit));
+                    cards.add(new Card(rank, suit, 0, 0));
                 }
             }
         }

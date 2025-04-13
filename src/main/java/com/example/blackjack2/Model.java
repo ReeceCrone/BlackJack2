@@ -6,6 +6,7 @@ import java.util.Optional;
 
 public class Model {
     private List<Stackable> stackables;
+
     private ArrayList<Subscriber> subs;
 
     public Model() {

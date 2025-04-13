@@ -8,7 +8,7 @@ public class Deck {
         cards = new ArrayList<Card>();
         for (Card.Rank rank : Card.Rank.values()) {
             for (Card.Suit suit : Card.Suit.values()) {
-                Card card = new Card(rank, suit);
+                Card card = new Card(rank, suit, 0, 0);
                 cards.add(card);
             }
         }
