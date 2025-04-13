@@ -6,12 +6,19 @@ import java.util.Optional;
 
 public class Model {
     private List<Stackable> stackables;
-
+    private List<Card> playerCards;
+    private List<Card> dealerCards;
+    private Shoe shoe;
     private ArrayList<Subscriber> subs;
+    private int dealerCarCounter, playerCarCounter;
 
     public Model() {
         stackables = new ArrayList<>();
         subs = new ArrayList<>();
+        playerCards = new ArrayList<>();
+        dealerCards = new ArrayList<>();
+        shoe = new Shoe();
+        shoe.shuffleShoe();
         initializeChips();
     }
 
