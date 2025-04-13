@@ -56,7 +56,7 @@ public class Card {
     public int getValue() {
         switch (rank) {
             case ACE:
-                return 1; // ACE could also be 11, depending on the game.
+                return 11; // ACE could also be 11, depending on the game.
             case TWO:
                 return 2;
             case THREE:
