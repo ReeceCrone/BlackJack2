@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.animation.AnimationTimer;
 
 import java.text.DecimalFormat;
 
@@ -56,7 +57,31 @@ public class TableView extends BorderPane implements Subscriber {
         setBottom(buttonBar);
 
         setCenter(canvas);
+        // Animation loop
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                boolean needsRedraw = false;
+                for (Card card : model.getPlayerCards()) {
+                    if (card.isMoving()) {
+                        card.updatePosition();
+                        needsRedraw = true;
+                    }
+                }
+                for (Card card : model.getDealerCards()) {
+                    if (card.isMoving()) {
+                        card.updatePosition();
+                        needsRedraw = true;
+                    }
+                }
+                if (needsRedraw) {
+                    draw();
+                }
+            }
+        }.start();
     }
+
+
 
     private void loadCardImages() {
         // Load the 52 card images (adjust paths accordingly)
@@ -125,14 +150,52 @@ public class TableView extends BorderPane implements Subscriber {
     }
 
     private void drawCards(List<Card> cards, double startX, double startY) {
-        double x = startX;
-        double y = startY;
         for (Card card : cards) {
-            Image cardImage = getCardImage(card);
-            gc.drawImage(cardImage, card.getX(), card.getY(), 142, 192);  // Draw each card with width 71px and height 96px
-            x += 80;  // Space between cards
+            drawCardWithTransform(card);
         }
     }
+
+    private void drawCardWithTransform(Card card) {
+        gc.save();
+
+        double x = card.getX();
+        double y = card.getY();
+        double width = 142;
+        double height = 192;
+        double centerX = x + width / 2;
+        double centerY = y + height / 2;
+
+        double flip = card.getFlipProgress();
+        double angle = card.getAngle();
+
+        gc.translate(centerX, centerY);
+        gc.rotate(angle);
+
+        double scaleX = Math.cos(Math.PI * flip);
+        gc.scale(scaleX, 1);
+
+        Image imageToDraw;
+        boolean isFront = flip >= 0.5;
+
+        if (isFront) {
+            imageToDraw = getCardImage(card);
+        } else {
+            imageToDraw = cardBackImage;
+        }
+
+        // If mirrored, flip the image horizontally again to correct it
+        if (isFront && scaleX < 0) {
+            gc.save();
+            gc.scale(-1, 1); // flip image back
+            gc.drawImage(imageToDraw, -width / 2, -height / 2, width, height);
+            gc.restore();
+        } else {
+            gc.drawImage(imageToDraw, -width / 2, -height / 2, width, height);
+        }
+
+        gc.restore();
+    }
+
 
     private Image getCardImage(Card card) {
         // For face-up cards, return the card's image

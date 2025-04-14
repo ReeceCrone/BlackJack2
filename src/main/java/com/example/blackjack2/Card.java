@@ -11,6 +11,11 @@ public class Card {
     private double width = 80;
     private double height = 120;
     private boolean faceUp;
+    private double targetX, targetY; // destination
+    private boolean moving = false;
+    private double angle = 45;     // Start at 45°
+    private boolean flipping = true;
+    private double flipProgress = 0.0; // 0.0 = back, 1.0 = face
 
     public Card(Rank rank, Suit suit, double x, double y) {
         this.rank = rank;
@@ -20,6 +25,41 @@ public class Card {
         this.faceUp = true;
     }
 
+    public void startMoveTo(double tx, double ty) {
+        this.targetX = tx;
+        this.targetY = ty;
+        this.moving = true;
+        this.angle = 45;
+        this.flipProgress = 0.0;
+        this.flipping = true;
+    }
+
+    public void updatePosition() {
+        double dx = targetX - x;
+        double dy = targetY - y;
+
+        if (Math.abs(dx) < 1 && Math.abs(dy) < 1) {
+            x = targetX;
+            y = targetY;
+            angle = 0;
+            flipProgress = 1.0;
+            moving = false;
+            flipping = false;
+        } else {
+            x += dx * 0.15;
+            y += dy * 0.15;
+            angle *= 0.85; // ease to 0
+            if (flipping) {
+                flipProgress += 0.15 * (1 - flipProgress);
+                if (flipProgress >= 1.0) {
+                    flipProgress = 1.0;
+                    flipping = false;
+                }
+            }
+        }
+    }
+    public boolean isMoving() { return moving; }
+
     public void setFaceUp(boolean faceUp) {
         this.faceUp = faceUp;
     }
@@ -27,6 +67,10 @@ public class Card {
     public boolean isFaceUp() {
         return faceUp;
     }
+
+    public double getAngle() { return angle; }
+
+    public double getFlipProgress() { return flipProgress; }
 
     public double getX() { return x; }
 

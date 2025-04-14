@@ -1,5 +1,8 @@
 package com.example.blackjack2;
 
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +15,9 @@ public class Model {
     private ArrayList<Subscriber> subs;
     private int playerTotal, dealerTotal;
     private int dealerCardCounter, playerCardCounter;
+    private double randX, randY, finalX, finalY;
+    private Card card;
+
 
     public Model() {
         stackables = new ArrayList<>();
@@ -152,44 +158,97 @@ public class Model {
         }
     }
     public void deal() {
+        randX = Math.random() * 10;
+        randY = Math.random() * 10;
         dealerCardCounter = 2;
         playerCardCounter = 2;
         playerCards.clear();
         dealerCards.clear();
-        Card card = shoe.drawCard();
-        card.setX(400);
-        card.setY(350);
-        playerCards.add(card);
-        card = shoe.drawCard();
-        card.setX(400);
-        card.setY(150);
-        dealerCards.add(card);
-        card = shoe.drawCard();
-        card.setX(440);
-        card.setY(350);
-        playerCards.add(card);
-        card = shoe.drawCard();
-        card.setX(440);
-        card.setY(150);
-        card.setFaceUp(false);
-        dealerCards.add(card); // This one is face down
 
+        // Deal player card 1
+        card = shoe.drawCard();
+        finalX = 400 + randX;
+        finalY = 350 + randY;
+        card.setX(1200); // Start off-screen
+        card.setY(-200); // Start off-screen
+        playerCards.add(card);
+        card.startMoveTo(finalX, finalY); // Start moving to final position
         notifySubscribers();
+
+        // Delay for 0.25 seconds before dealing the next card
+        PauseTransition pause1 = new PauseTransition(Duration.seconds(0.25));
+        pause1.setOnFinished(e -> {
+            // Deal player card 2
+            randX = Math.random() * 10;
+            randY = Math.random() * 10;
+            card = shoe.drawCard();
+            finalX = 440 + randX;
+            finalY = 350 + randY;
+            card.setX(1200); // Start off-screen
+            card.setY(-200); // Start off-screen
+            playerCards.add(card);
+            card.startMoveTo(finalX, finalY); // Start moving to final position
+            notifySubscribers();
+        });
+        pause1.play();
+
+        // Delay for another 0.25 seconds before dealing the dealer card 1
+        PauseTransition pause2 = new PauseTransition(Duration.seconds(0.25));
+        pause2.setOnFinished(e -> {
+            randX = Math.random() * 10;
+            randY = Math.random() * 10;
+            card = shoe.drawCard();
+            finalX = 400 + randX;
+            finalY = 150 + randY;
+            card.setX(1200); // Start off-screen
+            card.setY(-200); // Start off-screen
+            dealerCards.add(card);
+            card.startMoveTo(finalX, finalY); // Start moving to final position
+            notifySubscribers();
+        });
+        pause2.setDelay(Duration.seconds(0.5)); // Delay this by 0.5 seconds to ensure the second player card is dealt first
+        pause2.play();
+
+        // Delay for another 0.25 seconds before dealing the dealer card 2
+        PauseTransition pause3 = new PauseTransition(Duration.seconds(0.25));
+        pause3.setOnFinished(e -> {
+            randX = Math.random() * 10;
+            randY = Math.random() * 10;
+            card = shoe.drawCard();
+            finalX = 440 + randX;
+            finalY = 150 + randY;
+            card.setX(1200); // Start off-screen
+            card.setY(-200); // Start off-screen
+            dealerCards.add(card);
+            card.startMoveTo(finalX, finalY); // Start moving to final position
+            notifySubscribers();
+        });
+        pause3.setDelay(Duration.seconds(0.75)); // Delay this by 0.75 seconds so it's after both dealer cards are set
+        pause3.play();
     }
+
 
     public void hit() {
         if (getHandValue(playerCards) < 21) {
+            double randX = Math.random() * 10;
+            double randY = Math.random() * 10;
             Card card = shoe.drawCard();
-            card.setX(400 + playerCardCounter * 40);
+            double finalX = (400 + playerCardCounter * 40 + randX);
             playerCardCounter++;
-            card.setY(350);
+            double finalY = (350 + randY);
+            card.setX(1200); // offscreen right
+            card.setY(-200); // offscreen top
+            card.startMoveTo(finalX, finalY); // move to end position
             playerCards.add(card);
+
+
             notifySubscribers();
 
             if (getHandValue(playerCards) > 21) {
                 System.out.println("Player busts!");
-                // You can notify UI here that the game is over
             }
+
+
         }
     }
 
