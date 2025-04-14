@@ -132,12 +132,6 @@ public class TableView extends BorderPane implements Subscriber {
         gc.setFill(Color.DARKOLIVEGREEN);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        // Draw cards for the player
-        drawCards(model.getPlayerCards(), 100, 400);  // Example: Player cards starting at position (100, 400)
-
-        // Draw cards for the dealer
-        drawCards(model.getDealerCards(), 100, 100);  // Example: Dealer cards starting at position (100, 100)
-
         // Draw chips
         for (Stackable stackable : model.getStackables()) {
             if (stackable instanceof ChipStack) {
@@ -147,6 +141,14 @@ public class TableView extends BorderPane implements Subscriber {
                 drawChip((Chip) stackable);
             }
         }
+
+        // Draw cards for the player
+        drawCards(model.getPlayerCards(), 100, 400);  // Example: Player cards starting at position (100, 400)
+
+        // Draw cards for the dealer
+        drawCards(model.getDealerCards(), 100, 100);  // Example: Dealer cards starting at position (100, 100)
+
+
     }
 
     private void drawCards(List<Card> cards, double startX, double startY) {

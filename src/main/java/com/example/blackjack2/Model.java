@@ -175,22 +175,7 @@ public class Model {
         card.startMoveTo(finalX, finalY); // Start moving to final position
         notifySubscribers();
 
-        // Delay for 0.25 seconds before dealing the next card
-        PauseTransition pause1 = new PauseTransition(Duration.seconds(0.25));
-        pause1.setOnFinished(e -> {
-            // Deal player card 2
-            randX = Math.random() * 10;
-            randY = Math.random() * 10;
-            card = shoe.drawCard();
-            finalX = 440 + randX;
-            finalY = 350 + randY;
-            card.setX(1200); // Start off-screen
-            card.setY(-200); // Start off-screen
-            playerCards.add(card);
-            card.startMoveTo(finalX, finalY); // Start moving to final position
-            notifySubscribers();
-        });
-        pause1.play();
+
 
         // Delay for another 0.25 seconds before dealing the dealer card 1
         PauseTransition pause2 = new PauseTransition(Duration.seconds(0.25));
@@ -206,11 +191,29 @@ public class Model {
             card.startMoveTo(finalX, finalY); // Start moving to final position
             notifySubscribers();
         });
-        pause2.setDelay(Duration.seconds(0.5)); // Delay this by 0.5 seconds to ensure the second player card is dealt first
+
         pause2.play();
 
+        // Delay for 0.25 seconds before dealing the next card
+        PauseTransition pause1 = new PauseTransition(Duration.seconds(0.25));
+        pause1.setOnFinished(e -> {
+            // Deal player card 2
+            randX = Math.random() * 10;
+            randY = Math.random() * 10;
+            card = shoe.drawCard();
+            finalX = 440 + randX;
+            finalY = 350 + randY;
+            card.setX(1200); // Start off-screen
+            card.setY(-200); // Start off-screen
+            playerCards.add(card);
+            card.startMoveTo(finalX, finalY); // Start moving to final position
+            notifySubscribers();
+        });
+        pause1.setDelay(Duration.seconds(0.5)); // Delay this by 0.5 seconds to ensure the second player card is dealt first
+        pause1.play();
+
         // Delay for another 0.25 seconds before dealing the dealer card 2
-        PauseTransition pause3 = new PauseTransition(Duration.seconds(0.25));
+        PauseTransition pause3 = new PauseTransition(Duration.seconds(0.15));
         pause3.setOnFinished(e -> {
             randX = Math.random() * 10;
             randY = Math.random() * 10;
@@ -264,7 +267,7 @@ public class Model {
         int dealerTotal = getHandValue(dealerCards);
 
         if (dealerTotal < 17) {
-            PauseTransition pause = new PauseTransition(Duration.seconds(0.25));
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
             pause.setOnFinished(e -> {
                 double randX = Math.random() * 10;
                 double randY = Math.random() * 10;
@@ -282,7 +285,7 @@ public class Model {
                 // After this card is drawn, check again
                 drawNextDealerCard();
             });
-            pause.setDelay(Duration.seconds(0.5));
+            pause.setDelay(Duration.seconds(0.25));
             pause.play();
         } else {
             evaluateGameResult(); // Once dealer stands, evaluate result
