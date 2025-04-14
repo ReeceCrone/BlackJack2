@@ -254,18 +254,42 @@ public class Model {
 
     public void stand() {
         // Reveal dealer's face-down card
-
-        dealerCards.get(1).setFaceUp(true); // put cards face up
+        dealerCards.get(1).setFaceUp(true);
         notifySubscribers();
 
-        while (getHandValue(dealerCards) < 17) {
-            Card card = shoe.drawCard();
-            card.setX(400 + dealerCardCounter * 40);
-            dealerCardCounter++;
-            card.setY(150);
-            dealerCards.add(card);
-        }
+        drawNextDealerCard();
+    }
 
+    private void drawNextDealerCard() {
+        int dealerTotal = getHandValue(dealerCards);
+
+        if (dealerTotal < 17) {
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.25));
+            pause.setOnFinished(e -> {
+                double randX = Math.random() * 10;
+                double randY = Math.random() * 10;
+
+                Card card = shoe.drawCard();
+                double finalX = 400 + randX + dealerCardCounter * 40;
+                double finalY = 150 + randY;
+                card.setX(1200);
+                card.setY(-200);
+                dealerCardCounter++;
+                dealerCards.add(card);
+                card.startMoveTo(finalX, finalY);
+                notifySubscribers();
+
+                // After this card is drawn, check again
+                drawNextDealerCard();
+            });
+            pause.setDelay(Duration.seconds(0.5));
+            pause.play();
+        } else {
+            evaluateGameResult(); // Once dealer stands, evaluate result
+        }
+    }
+
+    private void evaluateGameResult() {
         int playerTotal = getHandValue(playerCards);
         int dealerTotal = getHandValue(dealerCards);
 
