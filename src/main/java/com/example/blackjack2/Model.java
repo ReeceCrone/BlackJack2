@@ -63,19 +63,6 @@ public class Model {
         stackables.add(s);
     }
 
-    public boolean isChipInStack(Chip chip) {
-        return stackables.stream().anyMatch(s -> s instanceof ChipStack && ((ChipStack) s).onElement(chip.getX()
-        , chip.getY()));
-    }
-
-    public void removeChipFromStack(Chip chip) {
-        for (Stackable s : stackables) {
-            if (s instanceof ChipStack && ((ChipStack) s).onElement(chip.getX(), chip.getY())) {
-                ((ChipStack) s).removeChild(chip);
-                break;
-            }
-        }
-    }
 
     public ChipStack getStackForChip(Chip chip) {
         for (Stackable s : stackables) {
@@ -89,14 +76,6 @@ public class Model {
         return null; // Chip is not in any stack
     }
 
-
-    public void createNewStack(Chip chip) {
-        ArrayList<Stackable> newStackables = new ArrayList<>();
-        newStackables.add(chip);
-        ChipStack newStack = new ChipStack(newStackables);
-        stackables.add(newStack);
-        notifySubscribers();
-    }
 
     public Optional<Stackable> getNearestStackable(double x, double y, Stackable excluding) {
         return stackables.stream()
