@@ -13,7 +13,9 @@ import javafx.animation.AnimationTimer;
 import java.text.DecimalFormat;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TableView extends BorderPane implements Subscriber {
     private Model model;
@@ -28,6 +30,8 @@ public class TableView extends BorderPane implements Subscriber {
     private Button dealButton;
     private Button hitButton;
     private Button standButton;
+
+    private final Map<String, Image> cardImageMap = new HashMap<>();
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
@@ -61,6 +65,8 @@ public class TableView extends BorderPane implements Subscriber {
         new AnimationTimer() {
             @Override
             public void handle(long now) {
+                if (model == null) return; // prevent null pointer crash
+
                 boolean needsRedraw = false;
                 for (Card card : model.getPlayerCards()) {
                     if (card.isMoving()) {
@@ -84,15 +90,15 @@ public class TableView extends BorderPane implements Subscriber {
 
 
     private void loadCardImages() {
-        // Load the 52 card images (adjust paths accordingly)
         String[] suits = {"hearts", "diamonds", "clubs", "spades"};
         String[] values = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace"};
 
-        int index = 0;
         for (String suit : suits) {
             for (String value : values) {
                 String cardName = value + "_of_" + suit;
-                cardImages[index++] = new Image(getClass().getResource("images/cards/" + cardName + ".png").toExternalForm());
+                String path = "images/cards/" + cardName + ".png";
+                Image img = new Image(getClass().getResource(path).toExternalForm());
+                cardImageMap.put(cardName, img);
             }
         }
     }
@@ -200,12 +206,11 @@ public class TableView extends BorderPane implements Subscriber {
 
 
     private Image getCardImage(Card card) {
-        // For face-up cards, return the card's image
         if (card.isFaceUp()) {
-            String cardName = card.toString();
-            return new Image(getClass().getResource("images/cards/" + cardName + ".png").toExternalForm());
+            String cardName = card.toString(); // assume this returns "value_of_suit" format
+            return cardImageMap.getOrDefault(cardName, cardBackImage);
         } else {
-            return cardBackImage;  // Face-down card
+            return cardBackImage;
         }
     }
 
