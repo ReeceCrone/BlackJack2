@@ -13,9 +13,7 @@ public class Model {
     private List<Card> dealerCards;
     private Shoe shoe;
     private ArrayList<Subscriber> subs;
-    private int playerTotal, dealerTotal;
     private int dealerCardCounter, playerCardCounter;
-    private double randX, randY, finalX, finalY;
     private Card card;
 
 
@@ -158,76 +156,55 @@ public class Model {
         }
     }
     public void deal() {
-        randX = Math.random() * 10;
-        randY = Math.random() * 10;
+        resetGameState();
+
+        dealPlayerCard(0, 0.0);
+        dealDealerCard(1, 0.25);
+        dealPlayerCard(1, 0.5);
+        dealDealerCard(2, 0.75);
+    }
+
+    private void resetGameState() {
         dealerCardCounter = 2;
         playerCardCounter = 2;
         playerCards.clear();
         dealerCards.clear();
+    }
 
-        // Deal player card 1
-        card = shoe.drawCard();
-        finalX = 400 + randX;
-        finalY = 350 + randY;
-        card.setX(1200); // Start off-screen
-        card.setY(-200); // Start off-screen
-        playerCards.add(card);
-        card.startMoveTo(finalX, finalY); // Start moving to final position
-        notifySubscribers();
+    private void dealPlayerCard(int index, double delaySeconds) {
+        PauseTransition pause = new PauseTransition(Duration.seconds(delaySeconds));
+        pause.setOnFinished(e -> {
+            Card card = shoe.drawCard();
+            double randX = Math.random() * 10;
+            double randY = Math.random() * 10;
+            double finalX = 400 + index * 40 + randX;
+            double finalY = 350 + randY;
 
-
-
-        // Delay for another 0.25 seconds before dealing the dealer card 1
-        PauseTransition pause2 = new PauseTransition(Duration.seconds(0.25));
-        pause2.setOnFinished(e -> {
-            randX = Math.random() * 10;
-            randY = Math.random() * 10;
-            card = shoe.drawCard();
-            finalX = 400 + randX;
-            finalY = 150 + randY;
-            card.setX(1200); // Start off-screen
-            card.setY(-200); // Start off-screen
-            dealerCards.add(card);
-            card.startMoveTo(finalX, finalY); // Start moving to final position
-            notifySubscribers();
-        });
-
-        pause2.play();
-
-        // Delay for 0.25 seconds before dealing the next card
-        PauseTransition pause1 = new PauseTransition(Duration.seconds(0.25));
-        pause1.setOnFinished(e -> {
-            // Deal player card 2
-            randX = Math.random() * 10;
-            randY = Math.random() * 10;
-            card = shoe.drawCard();
-            finalX = 440 + randX;
-            finalY = 350 + randY;
-            card.setX(1200); // Start off-screen
-            card.setY(-200); // Start off-screen
+            card.setX(1200);
+            card.setY(-200);
             playerCards.add(card);
-            card.startMoveTo(finalX, finalY); // Start moving to final position
+            card.startMoveTo(finalX, finalY);
             notifySubscribers();
         });
-        pause1.setDelay(Duration.seconds(0.5)); // Delay this by 0.5 seconds to ensure the second player card is dealt first
-        pause1.play();
+        pause.play();
+    }
 
-        // Delay for another 0.25 seconds before dealing the dealer card 2
-        PauseTransition pause3 = new PauseTransition(Duration.seconds(0.15));
-        pause3.setOnFinished(e -> {
-            randX = Math.random() * 10;
-            randY = Math.random() * 10;
-            card = shoe.drawCard();
-            finalX = 440 + randX;
-            finalY = 150 + randY;
-            card.setX(1200); // Start off-screen
-            card.setY(-200); // Start off-screen
+    private void dealDealerCard(int index, double delaySeconds) {
+        PauseTransition pause = new PauseTransition(Duration.seconds(delaySeconds));
+        pause.setOnFinished(e -> {
+            Card card = shoe.drawCard();
+            double randX = Math.random() * 10;
+            double randY = Math.random() * 10;
+            double finalX = 400 + (index - 1) * 40 + randX; // index-1 aligns with player layout
+            double finalY = 150 + randY;
+
+            card.setX(1200);
+            card.setY(-200);
             dealerCards.add(card);
-            card.startMoveTo(finalX, finalY); // Start moving to final position
+            card.startMoveTo(finalX, finalY);
             notifySubscribers();
         });
-        pause3.setDelay(Duration.seconds(0.75)); // Delay this by 0.75 seconds so it's after both dealer cards are set
-        pause3.play();
+        pause.play();
     }
 
 
