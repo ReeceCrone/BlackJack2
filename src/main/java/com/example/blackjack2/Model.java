@@ -14,7 +14,6 @@ public class Model {
     private Shoe shoe;
     private ArrayList<Subscriber> subs;
     private int dealerCardCounter, playerCardCounter;
-    private Card card;
 
 
     public Model() {
@@ -24,8 +23,6 @@ public class Model {
         dealerCards = new ArrayList<>();
         dealerCardCounter = 0;
         playerCardCounter = 0;
-        dealerTotal = 0;
-        playerTotal = 0;
         shoe = new Shoe();
         shoe.shuffleShoe();
         initializeChips();
