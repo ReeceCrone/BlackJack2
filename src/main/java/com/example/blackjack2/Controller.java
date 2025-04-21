@@ -128,6 +128,13 @@ public class Controller {
             Optional<Stackable> nearest = model.getNearestStackable(e.getX(), e.getY(), iModel.getSelectedComponent());
             System.out.println(nearest);
 
+            // betting position
+//            if (model.getBettingPosition().isInside(e.getX(), e.getY())) {
+//                model.getBettingPosition().setContents(iModel.getSelectedComponent());
+//                iModel.setBettedComponent(iModel.getSelectedComponent());
+//
+//            }
+
             if (nearest.isPresent()) {
                 Stackable targetChip = nearest.get();
                 model.mergeChips(iModel.getSelectedComponent(), targetChip);
