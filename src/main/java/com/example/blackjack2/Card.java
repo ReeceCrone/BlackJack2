@@ -16,6 +16,7 @@ public class Card {
     private double angle = 45;     // Start at 45°
     private boolean flipping = true;
     private double flipProgress = 0.0; // 0.0 = back, 1.0 = face
+    private double endAngle;
 
     public Card(Rank rank, Suit suit, double x, double y) {
         this.rank = rank;
@@ -23,8 +24,21 @@ public class Card {
         this.x = x;
         this.y = y;
         this.faceUp = true;
+        this.endAngle = Math.random();
+        if (endAngle < 0.5) {
+            endAngle = endAngle * -5;
+        } else {
+            endAngle = endAngle * 5;
+        }
     }
 
+    /**
+     * Initiates a smooth movement of the object to a target position (tx, ty).
+     * Also starts a flip animation by resetting flip progress and angle.
+     *
+     * @param tx the target x-coordinate
+     * @param ty the target y-coordinate
+     */
     public void startMoveTo(double tx, double ty) {
         this.targetX = tx;
         this.targetY = ty;
@@ -34,6 +48,11 @@ public class Card {
         this.flipping = true;
     }
 
+    /**
+     * Updates the current position and angle of the object as it moves toward its target.
+     * Also progresses the flip animation. Once the movement is nearly complete, it finalizes
+     * the position and stops further animation.
+     */
     public void updatePosition() {
         double dx = targetX - x;
         double dy = targetY - y;
@@ -41,14 +60,15 @@ public class Card {
         if (Math.abs(dx) < 1 && Math.abs(dy) < 1) {
             x = targetX;
             y = targetY;
-            angle = 0;
+            angle = endAngle;
             flipProgress = 1.0;
             moving = false;
             flipping = false;
         } else {
             x += dx * 0.15;
             y += dy * 0.15;
-            angle *= 0.85; // ease to 0
+            angle += (endAngle - angle) * 0.15;
+            // ease to 0
             if (flipping) {
                 flipProgress += 0.15 * (1 - flipProgress);
                 if (flipProgress >= 1.0) {
@@ -97,6 +117,10 @@ public class Card {
         return suit.toString();
     }
 
+    /**
+     * gets cards value
+     * @return an int of th cards value
+     */
     public int getValue() {
         switch (rank) {
             case ACE:
@@ -127,10 +151,16 @@ public class Card {
         }
     }
 
+
+    //this is for later, incase I want to be able to move the cards
     public boolean onElement(double x, double y) {
         return x >= this.x && x <= this.x + width && y >= this.y && y <= this.y + height;
     }
 
+    /**
+     * returns the cards string format so we can get its image
+     * @return a string respresenting the card
+     */
     public String toString() {
         String card_rank;
         String card_suit;
