@@ -134,9 +134,29 @@ public class TableView extends BorderPane implements Subscriber {
     }
 
     public void draw() {
+
+        //if the game is over, only enable deal button to restart game,
+        //else, if it is still going, only have the hit and stand buttons
+        if (model.isGameOver()) {
+            hitButton.setDisable(true);
+            standButton.setDisable(true);
+            dealButton.setDisable(false);
+        } else {
+            hitButton.setDisable(false);
+            standButton.setDisable(false);
+            dealButton.setDisable(true);
+        }
+
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setFill(Color.DARKOLIVEGREEN);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        BettingPosition bp = model.getBettingPosition();
+        gc.setStroke(Color.BLACK);
+        //gc.setFill(Color.GOLD);
+        //gc.fillOval(bp.getX() - bp.getWidth()/2, bp.getY() - bp.getHeight()/2, bp.getWidth(), bp.getHeight());
+        gc.setLineWidth(3);
+        gc.strokeOval(bp.getX() - bp.getWidth()/2, bp.getY() - bp.getHeight()/2, bp.getWidth(), bp.getHeight());
 
         // Draw chips
         for (Stackable stackable : model.getStackables()) {
@@ -154,12 +174,37 @@ public class TableView extends BorderPane implements Subscriber {
         // Draw cards for the dealer
         drawCards(model.getDealerCards(), 100, 100);  // Example: Dealer cards starting at position (100, 100)
 
+        gc.setFill(Color.BLACK);
+        gc.setFont(new Font("Courier New", 14));
+        gc.fillText("Dealer Cards:", 10, 560);
 
+        drawMiniCards(model.getDealerCards(), 10, 570);
+
+        gc.fillText("Player Cards:", 10, 650);
+
+
+        drawMiniCards(model.getPlayerCards(), 10, 660);
     }
 
     private void drawCards(List<Card> cards, double startX, double startY) {
         for (Card card : cards) {
             drawCardWithTransform(card);
+        }
+    }
+
+    private void drawMiniCards(List<Card> cards, double startX, double startY) {
+        double spacing = 45;
+        double width = 40;
+        double height = 60;
+
+        for (int i = 0; i < cards.size(); i++) {
+            Card card = cards.get(i);
+
+            double x = startX + i * spacing;
+            double y = startY;
+
+            Image img = getCardImage(card);
+            gc.drawImage(img, x, y, width, height);
         }
     }
 
@@ -214,6 +259,7 @@ public class TableView extends BorderPane implements Subscriber {
         }
     }
 
+
     private void drawChip(Chip chip) {
         Image imgToUse;
         switch ((int)(chip.getValue())) {
@@ -249,7 +295,8 @@ public class TableView extends BorderPane implements Subscriber {
                 amountInStacks = chip.getValue();
             }
 
-            gc.setFont(new Font("Arial", 10));
+            gc.setFont(new Font("Courier New", 12));
+
             double[] xPoints = {textX - 10, textX - 2, textX - 2}; // X coordinates of the triangle
             double[] yPoints = {textY - 3, textY - 8, textY + 2}; // Y coordinates of the triangle
             gc.fillPolygon(xPoints, yPoints, 3);
